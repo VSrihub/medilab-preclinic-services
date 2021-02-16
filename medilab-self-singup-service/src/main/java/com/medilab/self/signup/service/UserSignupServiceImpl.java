@@ -3,6 +3,7 @@
  */
 package com.medilab.self.signup.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -13,6 +14,7 @@ import com.medilab.self.signup.bean.MedilabUserBean;
 import com.medilab.self.signup.model.MedilabUser;
 import com.medilab.self.signup.repo.UserRepository;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,11 +22,17 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Service
+@Data
 @Slf4j
 public class UserSignupServiceImpl implements UserSignupService {
 
+
 	@Autowired
+	/**
+	 * user Repository
+	 */
 	private UserRepository userRepo;
+	
 
 	/*
 	 * (non-Javadoc)
@@ -33,21 +41,25 @@ public class UserSignupServiceImpl implements UserSignupService {
 	 * signup.bean.MedilabUserBean)
 	 */
 	@Override
-	public MedilabUserBean save(MedilabUserBean userBean) {
-		log.info("inam in medilab user save methods" + userBean.toString());
-
-		MedilabUser userModel = new MedilabUser();
+	public MedilabUserBean save(final MedilabUserBean userBean) {
+		log.info("inam in medilab user save methods {}" , userBean.toString());
+		test();
+		final MedilabUser userModel = new MedilabUser();
 
 		// To Convert the bean to the model
 		BeanUtils.copyProperties(userBean, userModel);
 
 		userRepo.save(userModel);
 		
-		log.info("saved data is:\t"+userModel.toString());
+		log.info("saved data is:{} \t", userModel.toString());
 
 		BeanUtils.copyProperties(userModel, userBean);
 
 		return userBean;
+	}
+	
+	private void test() {
+		log.info("inam in medilab user void private methods");
 	}
 
 	/*
@@ -59,8 +71,20 @@ public class UserSignupServiceImpl implements UserSignupService {
 	 */
 	@Override
 	public MedilabUserBean update(MedilabUserBean userBean) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("inam in medilab user update methods {}" , userBean.toString());
+
+		MedilabUser userModel = new MedilabUser();
+
+		// To Convert the bean to the model
+		BeanUtils.copyProperties(userBean, userModel);
+
+		userRepo.save(userModel);
+		
+		log.info("update data is:{} ", userModel.toString());
+
+		BeanUtils.copyProperties(userModel, userBean);
+
+		return userBean;
 	}
 
 	/*
@@ -72,8 +96,12 @@ public class UserSignupServiceImpl implements UserSignupService {
 	 */
 	@Override
 	public List<MedilabUserBean> delete(MedilabUserBean userBean) {
-		// TODO Auto-generated method stub
-		return null;
+		MedilabUser userModel = new MedilabUser();
+
+		// To Convert the bean to the model
+		BeanUtils.copyProperties(userBean, userModel);
+		userRepo.delete(userModel);		
+		return findAll();
 	}
 
 	/*
@@ -83,8 +111,8 @@ public class UserSignupServiceImpl implements UserSignupService {
 	 */
 	@Override
 	public List<MedilabUserBean> delete(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		userRepo.deleteById(id);
+		return findAll();
 	}
 
 	/*
@@ -94,8 +122,10 @@ public class UserSignupServiceImpl implements UserSignupService {
 	 */
 	@Override
 	public MedilabUserBean findById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		MedilabUser userModel = userRepo.findById(id).get();
+		MedilabUserBean userDataBean = new MedilabUserBean();
+		BeanUtils.copyProperties(userModel, userDataBean);
+		return userDataBean;
 	}
 
 	/*
@@ -105,7 +135,18 @@ public class UserSignupServiceImpl implements UserSignupService {
 	 */
 	@Override
 	public List<MedilabUserBean> findAll() {
-		// TODO Auto-generated method stub
+		List<MedilabUser> usersList = userRepo.findAll();
+		if(usersList != null && usersList.size() >0) {
+			
+			List<MedilabUserBean> userBeanList = new ArrayList<>();
+			
+			usersList.stream().forEach(dbUser->{
+				MedilabUserBean userDataBean = new MedilabUserBean();
+				BeanUtils.copyProperties(dbUser, userDataBean);
+				userBeanList.add(userDataBean);
+			});
+			return userBeanList;
+		}
 		return null;
 	}
 
