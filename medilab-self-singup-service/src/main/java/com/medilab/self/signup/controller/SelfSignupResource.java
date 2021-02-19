@@ -5,6 +5,8 @@ package com.medilab.self.signup.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.medilab.self.signup.bean.MedilabUserBean;
+import com.medilab.self.signup.exception.DuplicateUserProfileException;
 import com.medilab.self.signup.service.UserSignupService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +38,7 @@ public class SelfSignupResource {
 	private UserSignupService signupService;
 
 	@PostMapping("/mediplab-user")
-	public ResponseEntity<MedilabUserBean> saveUser(@RequestBody MedilabUserBean userBean) {
+	public ResponseEntity<MedilabUserBean> saveUser(@Valid @RequestBody MedilabUserBean userBean) throws DuplicateUserProfileException {
 		userBean = signupService.save(userBean);
 		return ResponseEntity.status(HttpStatus.CREATED).body(userBean);
 	}

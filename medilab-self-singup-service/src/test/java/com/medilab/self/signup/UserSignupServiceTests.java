@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.medilab.self.signup.bean.MedilabUserBean;
+import com.medilab.self.signup.exception.DuplicateUserProfileException;
 import com.medilab.self.signup.service.UserSignupService;
 
 /**
@@ -25,7 +26,7 @@ public class UserSignupServiceTests extends MedilabSelfSingupServiceApplicationT
 	private UserSignupService userService;
 	
 	@Test
-	public void testSave() {
+	public void testSave() throws DuplicateUserProfileException {
 		MedilabUserBean userBean = new MedilabUserBean();
 		userBean.setFname("User");
 		userBean.setLname("test1");

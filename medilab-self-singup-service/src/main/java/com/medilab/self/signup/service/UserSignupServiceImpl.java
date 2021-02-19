@@ -6,11 +6,15 @@ package com.medilab.self.signup.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.medilab.self.signup.bean.MedilabUserBean;
+import com.medilab.self.signup.exception.DuplicateUserProfileException;
+import com.medilab.self.signup.exception.ExceptionMessagesConstant;
 import com.medilab.self.signup.model.MedilabUser;
 import com.medilab.self.signup.repo.UserRepository;
 
@@ -33,6 +37,9 @@ public class UserSignupServiceImpl implements UserSignupService {
 	 */
 	private UserRepository userRepo;
 	
+	@Autowired
+	private Environment env;
+	
 
 	/*
 	 * (non-Javadoc)
@@ -41,15 +48,22 @@ public class UserSignupServiceImpl implements UserSignupService {
 	 * signup.bean.MedilabUserBean)
 	 */
 	@Override
-	public MedilabUserBean save(final MedilabUserBean userBean) {
+	public MedilabUserBean save(final MedilabUserBean userBean) throws DuplicateUserProfileException {
 		log.info("inam in medilab user save methods {}" , userBean.toString());
 		test();
 		final MedilabUser userModel = new MedilabUser();
 
 		// To Convert the bean to the model
 		BeanUtils.copyProperties(userBean, userModel);
-
-		userRepo.save(userModel);
+        try {
+        	userRepo.save(userModel);
+        }catch (Exception e) {
+        	//if(e instanceof ConstraintViolationException) {
+        		throw new DuplicateUserProfileException(env.getProperty(ExceptionMessagesConstant.DATA_DUPLICATE_EXCEPTION));
+        	//}
+			
+		}
+		
 		
 		log.info("saved data is:{} \t", userModel.toString());
 
