@@ -39,8 +39,7 @@ public class UserSignupServiceTests extends MedilabSelfSingupServiceApplicationT
 		assertNotNull(dbSavedUserBean);
 		assertNotNull(dbSavedUserBean.getId());		
 		assertThat(dbSavedUserBean.getId());
-		assertEquals(userBean.getPassword(),dbSavedUserBean.getPassword());
-		
+		assertEquals(userBean.getPassword(),dbSavedUserBean.getPassword());		
 	}
 	
 	@Test

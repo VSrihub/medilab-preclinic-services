@@ -65,7 +65,7 @@ public class UserSignupServiceImpl implements UserSignupService {
 		}
 		
 		
-		log.info("saved data is:{} \t", userModel.toString());
+		log.info("saved data is:{} \t", userModel);
 
 		BeanUtils.copyProperties(userModel, userBean);
 
