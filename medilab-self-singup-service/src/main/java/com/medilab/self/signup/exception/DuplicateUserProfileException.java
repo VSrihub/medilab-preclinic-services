@@ -12,6 +12,7 @@ import lombok.Getter;
 @Getter
 public class DuplicateUserProfileException extends Exception {
 
+	
 	/**
 	 * 
 	 */
