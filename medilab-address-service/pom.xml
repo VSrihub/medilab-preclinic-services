@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.nareshit</groupId>
-	<artifactId>medilab-address-service</artifactId>
+	<artifactId>medilab-department-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>medilab-address-service</name>
-	<description>Medilab address Service</description>
+	<name>medilab-department-service</name>
+	<description>Medilab department Service</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
