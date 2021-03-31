@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
@@ -24,5 +27,18 @@ public class MedilabAppGatewayApplication {
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
+	}
+	
+	@Bean
+	public JedisConnectionFactory redisConnection() {
+		RedisStandaloneConfiguration conf = new RedisStandaloneConfiguration();
+		return new JedisConnectionFactory(conf);
+	}
+	
+	@Bean
+	public RedisTemplate<String, String>  redisTemplate(){
+		RedisTemplate<String, String> template = new RedisTemplate<>();
+		template.setConnectionFactory(redisConnection());
+		return template;
 	}
 }

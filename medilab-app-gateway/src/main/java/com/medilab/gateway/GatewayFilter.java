@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -22,11 +24,15 @@ public class GatewayFilter extends ZuulServletFilter {
 	@Autowired
 	private Auth0IdpClient authoIdpClient;
 	
+	@Autowired
+	private RedisTemplate redisTemplate;
+	
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {
 		System.out.println("i am in shouldFilter filter");
 		HttpServletRequest request = (HttpServletRequest)servletRequest;
+		HttpServletResponse response = (HttpServletResponse)servletResponse;
 		String headerVal = request.getHeader("Authorization");
 		if(headerVal != null && !headerVal.isEmpty()) {
 			if(headerVal.contains("Bearer "))
@@ -37,7 +43,10 @@ public class GatewayFilter extends ZuulServletFilter {
 			
 			String userInfo = authoIdpClient.idpTokenValidation(headerVal);
 			if(userInfo != null && !userInfo.isEmpty()) {
-				super.doFilter(servletRequest, servletResponse, filterChain);
+				//response.setHeader("Authorization", headerVal);
+				HashOperations hashOps = redisTemplate.opsForHash();
+				hashOps.putIfAbsent("x-Authorization", "Bearer", headerVal);
+				super.doFilter(request, response, filterChain);
 			}else {
 				HttpServletResponse resp = (HttpServletResponse) servletResponse;
 				//resp.setStatus(403);
