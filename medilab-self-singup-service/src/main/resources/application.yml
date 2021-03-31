@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: self-signup-service
+  profiles:
+    active: dev
+server:
+  port: 9095
+user: 
+ data:
+  duplicate: 
+    message: The Data submitted may have already existed. Please check the data and submit once again
+---
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/medilab-user-store
+    #url: jdbc:mysql://medilab-user-service-mysql:3306/medilab-user-store
+    username: root
+    password: root
+  jpa:
+    generate-ddl: true
+    show-sql: true
+---
+spring:
+  profiles: stage
+  h2:
+    console:
+      enabled: true
+      path: /h2Console
