@@ -6,7 +6,7 @@ import com.medilab.doctor.bean.DoctorBean;
 
 public interface DoctorService {
 
-	public DoctorBean save(DoctorBean deptBean);
+	public DoctorBean save(DoctorBean deptBean, String bearerToken);
 	public DoctorBean findById(int id);
 	public DoctorBean findByName(String name);
 	public List<DoctorBean> findAll();

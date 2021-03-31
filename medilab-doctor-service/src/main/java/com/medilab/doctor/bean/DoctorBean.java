@@ -37,7 +37,7 @@ public class DoctorBean implements Serializable {
 	private String phone;
 	
 	//private String commAdderss;
-	private Object commAdderss;
+	private DoctorAddressBean commAdderss;
 	
 	private String biography;
 	private boolean status;
